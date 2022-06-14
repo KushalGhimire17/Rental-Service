@@ -2,7 +2,6 @@ from rest_framework import serializers
 from .models import User, Profile
 from django.contrib.auth import password_validation
 from products.models import BookProduct
-import json
 from django.http import JsonResponse
 
 #Serializer to Get User Details using Django Token Authentication
@@ -76,7 +75,7 @@ class ProfileSerializer(serializers.ModelSerializer):
             # items = BookProduct.objects.filter(profile__user=obj.user)
             items = BookProduct.objects.all().values_list()
             res = {
-                'items': items,
+                'items': list(items),
             }
             for item in items:
                 print("item is ",item)

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from products.models import Product, ProductMultipleImage, Category
+from products.models import Product, ProductMultipleImage, Category, Message
 
 from .models import BookProduct
 
@@ -20,3 +20,4 @@ class ProductMultipleImageAdmin(admin.ModelAdmin):
     pass
 
 admin.site.register(Category)
+admin.site.register(Message)

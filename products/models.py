@@ -16,7 +16,7 @@ class Product(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
     image = models.ImageField(upload_to='images', null=True, blank=True)
-    price = models.PositiveIntegerField(default=0)
+    price = models.FloatField(default=0)
     location = models.CharField(max_length=50)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -45,3 +45,10 @@ class BookProduct(models.Model):
 
     def __str__(self):
         return f'Product: {self.product.name} / Booked by {self.profile.user.phone}'
+
+
+class Message(models.Model):
+    """A model to pass message in a contact us page"""
+    email = models.EmailField()
+    phone = models.IntegerField()
+    message = models.TextField(help_text="Enter your message here")

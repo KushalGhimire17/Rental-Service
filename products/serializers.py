@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import BookProduct, Product, ProductMultipleImage, Category
+from .models import BookProduct, Message, Product, ProductMultipleImage, Category
 
 from taggit.serializers import (TagListSerializerField,
                                 TaggitSerializer)
@@ -82,3 +82,9 @@ class BookProductSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 #==============================================
+
+class MessageSerializer(serializers.ModelSerializer):
+    """Message serializer to accept message from contact us page"""
+    class Meta:
+        model = Message
+        fields = '__all__'

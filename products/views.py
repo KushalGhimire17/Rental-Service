@@ -48,3 +48,17 @@ class BookProductDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = BookProductSerializer
     permission_classes = [IsAdminUserOrReadOnly]
     authentication_classes = [SessionAuthentication, BasicAuthentication]
+
+
+class CategoryList(generics.ListCreateAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    authentication_classes = [TokenAuthentication, SessionAuthentication]
+    permission_classes = [IsAdminUserOrReadOnly]
+
+
+class CategoryDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    permission_classes = [IsAdminUserOrReadOnly]
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
