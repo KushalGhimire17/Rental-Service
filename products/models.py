@@ -22,6 +22,7 @@ class Product(models.Model):
     updated = models.DateTimeField(auto_now=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     is_posted = models.BooleanField(default=False)
+    is_featured = models.BooleanField(default=False)
     tags = TaggableManager()
 
     def get_tags(self):
@@ -52,3 +53,10 @@ class Message(models.Model):
     email = models.EmailField()
     phone = models.IntegerField()
     message = models.TextField(help_text="Enter your message here")
+
+
+class Company(models.Model):
+    """A model to take company details """
+    email = models.EmailField()
+    phone = models.IntegerField()
+    location = models.CharField(max_length=256)

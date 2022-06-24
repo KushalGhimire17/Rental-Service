@@ -1,5 +1,6 @@
+from dataclasses import fields
 from rest_framework import serializers
-from .models import BookProduct, Message, Product, ProductMultipleImage, Category
+from .models import BookProduct, Message, Product, ProductMultipleImage, Category, Company
 
 from taggit.serializers import (TagListSerializerField,
                                 TaggitSerializer)
@@ -41,7 +42,7 @@ class ProductSerializer(TaggitSerializer,serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = ['id', 'user', 'name', 'description', 'image', 'price', 'location', 'created', 'updated', 'category', 'tags']
-        read_only_fields = ("user", "is_posted")
+        read_only_fields = ("user", "is_posted", "is_featured")
     
 #===========================================
 
@@ -87,4 +88,19 @@ class MessageSerializer(serializers.ModelSerializer):
     """Message serializer to accept message from contact us page"""
     class Meta:
         model = Message
+        fields = '__all__'
+
+
+
+#==============================================
+
+class CompanySerializer(serializers.ModelSerializer):
+    """Company serializer to accept company details """
+    class Meta:
+        model = Company
+        fields = '__all__'
+
+class ProductMultipleImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductMultipleImage
         fields = '__all__'
