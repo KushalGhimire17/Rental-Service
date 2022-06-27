@@ -13,12 +13,14 @@ from .models import Product, ProductMultipleImage, Category, BookProduct, Messag
 
 from django.http import HttpResponse
 
-
+from rest_framework.filters import SearchFilter
 
 
 class ProductList(generics.ListCreateAPIView):
     queryset = Product.objects.filter(is_posted=True)
     serializer_class = ProductSerializer
+    filter_backends = [SearchFilter]
+    search_fields = ['name', 'price', 'location']
     authentication_classes = [TokenAuthentication, SessionAuthentication, BasicAuthentication]
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
@@ -29,7 +31,7 @@ class ProductList(generics.ListCreateAPIView):
             return HttpResponse('<p>Create a free account to post !</p>')
 
 class ProductDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Product.objects.all()
+    queryset = Product.objects.filter(is_posted=True)
     serializer_class = ProductSerializer
     permission_classes = [IsAuthorOrReadOnly]
     authentication_classes = [SessionAuthentication, BasicAuthentication]
@@ -48,7 +50,7 @@ class FeaturedProductList(generics.ListCreateAPIView):
             return HttpResponse('<p>Create a free account to post !</p>')
 
 class FeaturedProductDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Product.objects.all()
+    queryset = Product.objects.filter(is_featured=True)
     serializer_class = ProductSerializer
     permission_classes = [IsAuthorOrReadOnly]
     authentication_classes = [SessionAuthentication, BasicAuthentication]
