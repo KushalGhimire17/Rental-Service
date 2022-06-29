@@ -1,5 +1,5 @@
 from django.contrib import admin
-from products.models import Product, ProductMultipleImage, Category, Message
+from products.models import Product, ProductMultipleImage, Category, Message, ProductOverview, FeaturedProduct
 
 from .models import BookProduct
 
@@ -18,6 +18,18 @@ class ProductAdmin(admin.ModelAdmin):
 @admin.register(ProductMultipleImage)
 class ProductMultipleImageAdmin(admin.ModelAdmin):
     pass
+
+
+class ProductOverViewAdmin(admin.ModelAdmin):
+    list_display = ('name', 'value', 'product')
+
+admin.site.register(ProductOverview, ProductOverViewAdmin)
+
+class FeturedProductAdmin(admin.ModelAdmin):
+    list_display = ('id', 'product')
+
+admin.site.register(FeaturedProduct, FeturedProductAdmin)
+
 
 admin.site.register(Category)
 admin.site.register(Message)

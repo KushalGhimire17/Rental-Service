@@ -9,12 +9,15 @@ from .serializers import ProductSerializer, CategorySerializer, BookProductSeria
 
 from .permissions import IsAuthorOrReadOnly, IsAdminUserOrReadOnly
 
-from .models import Product, ProductMultipleImage, Category, BookProduct, Message, Company
+from .models import Product, ProductMultipleImage, Category, BookProduct, Message, Company, ProductOverview
 
 from django.http import HttpResponse
 
 from rest_framework.filters import SearchFilter
 
+from django.http import JsonResponse
+
+from itertools import groupby
 
 class ProductList(generics.ListCreateAPIView):
     queryset = Product.objects.filter(is_posted=True)
@@ -125,3 +128,48 @@ class ProductGalleryDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ProductMultipleImageSerializer
     permission_classes = [IsAdminUserOrReadOnly]
     authentication_classes = [SessionAuthentication, BasicAuthentication]
+
+
+def getProductDetail(request, id):
+    products = list(Product.objects.values( "id","name", "image", "description", "price", "location","created" ).filter(id=id));
+    print(products)
+    if not products:
+        return  JsonResponse({"error": "data not found"}, safe=False, status=404)
+    images = list(ProductMultipleImage.objects.values("images").filter(product=products[0]['id']))
+    overviews = list(ProductOverview.objects.values("name", "value").filter(product=products[0]['id']))
+    imagesList = [ products[0]['image']]
+    for image in images:
+        imagesList.append(image['images'])
+    products[0]['images'] = imagesList;
+    products[0]['overviews'] = overviews;
+    product = products[0]
+    return  JsonResponse(product, safe=False)
+
+  
+# define a fuction for key
+def key_func(k):
+    return k['category']
+  
+
+def getFeaturedList(request):
+    products = list(Product.objects.values( "id" ,"name", "image", "price", "location", "category" ));    
+    if not products:
+        return  JsonResponse({"error": "data not found"}, safe=False, status=404)
+    for index, product in enumerate( products):
+        categories = list(Category.objects.values("name").filter(id = product['category']))
+        if categories:
+            products[index]['category'] = categories[0]['name']
+        else:
+            products[index]['category'] = ""
+    returnProducts = []
+    for key, value in groupby(products, key_func):
+        index = -1;
+        for ind, pro in enumerate(returnProducts):
+            if pro['category'] == key:
+                index = ind
+        if index == -1:
+            returnProducts.append({ "category": key, "rents": list(value)})    
+        else:
+            returnProducts[index]['rents'].append(list(value)[0])  
+    print(returnProducts)
+    return  JsonResponse(returnProducts, safe=False)

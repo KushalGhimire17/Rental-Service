@@ -60,3 +60,13 @@ class Company(models.Model):
     email = models.EmailField()
     phone = models.IntegerField()
     location = models.CharField(max_length=256)
+
+
+
+class ProductOverview(models.Model):
+    name = models.CharField(max_length=255)
+    value = models.CharField(max_length=255)
+    product = models.ForeignKey(Product, default=None, on_delete=models.CASCADE)
+    
+class FeaturedProduct(models.Model):
+    product = models.ForeignKey(Product, default=None, on_delete=models.CASCADE, unique=True)

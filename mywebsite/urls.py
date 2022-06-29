@@ -7,6 +7,8 @@ from rest_framework_swagger.views import get_swagger_view
 
 from products.views import MessageList, MessageDetail, CompanyList, CompanyDetail
 
+from products import views
+
 API_TITLE = 'Rent API'
 API_DESCRIPTION = 'A web api for CRUD operations along with permissions mixins'
 schema_view = get_schema_view(title=API_TITLE)
@@ -26,5 +28,10 @@ urlpatterns = [
 
     path('schema/', schema_view),
     path('docs/', include_docs_urls(title=API_TITLE, description=API_DESCRIPTION)),
-    path('swagger-docs/', schema_view_swagger)
+    path('swagger-docs/', schema_view_swagger),
+
+
+
+    path('api/product/detail/<int:id>/',  views.getProductDetail, name="Product Detail"),
+    path('api/product/featured/',  views.getFeaturedList, name="Featured Products")
 ]
