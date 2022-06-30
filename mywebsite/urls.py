@@ -20,10 +20,10 @@ urlpatterns = [
     path('products/', include('products.urls')),
     path('api-auth/', include('rest_framework.urls')),
 
-    path('message/',MessageList.as_view(), name='message-list'),
+    path('message/', MessageList.as_view(), name='message-list'),
     path('message/<int:pk>/', MessageDetail.as_view(), name='message-detail'),
-    
-    path('company/',CompanyList.as_view(), name='company-list'),
+
+    path('company/', CompanyList.as_view(), name='company-list'),
     path('company/<int:pk>/', CompanyDetail.as_view(), name='company-detail'),
 
     path('schema/', schema_view),
@@ -31,7 +31,15 @@ urlpatterns = [
     path('swagger-docs/', schema_view_swagger),
 
 
+    path('api/categories/',
+         views.getAllCategories, name="Categories Detail"),
 
-    path('api/product/detail/<int:id>/',  views.getProductDetail, name="Product Detail"),
-    path('api/product/featured/',  views.getFeaturedList, name="Featured Products")
+    path('api/product/detail/<int:id>/',
+         views.getProductDetail, name="Product Detail"),
+    path('api/product/featured/',  views.getFeaturedList, name="Featured Products"),
+
+    path('api/search/<str:search_key>/',
+         views.getSearchList, name="Search Result"),
+    path('api/all/<str:category>/',
+         views.getAllProductsWithCategoryName, name="Products")
 ]

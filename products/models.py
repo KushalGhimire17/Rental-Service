@@ -2,9 +2,11 @@ from django.db import models
 from taggit.managers import TaggableManager
 # Create your models here.
 
+
 class Category(models.Model):
     name = models.CharField(max_length=50)
     description = models.TextField()
+    image = models.ImageField(upload_to='images', null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -12,7 +14,8 @@ class Category(models.Model):
 
 class Product(models.Model):
     # status choice field : available, pending, booked
-    user = models.ForeignKey("accounts.User", related_name='products', on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        "accounts.User", related_name='products', on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     description = models.TextField()
     image = models.ImageField(upload_to='images', null=True, blank=True)
@@ -31,8 +34,10 @@ class Product(models.Model):
     def __str__(self):
         return f'Product: {self.name} - Posted by: {self.user.phone}'
 
+
 class ProductMultipleImage(models.Model):
-    product = models.ForeignKey(Product, default=None, on_delete=models.CASCADE)
+    product = models.ForeignKey(
+        Product, default=None, on_delete=models.CASCADE)
     images = models.ImageField(upload_to='images/', null=True, blank=True)
 
     def __str__(self):
@@ -62,11 +67,13 @@ class Company(models.Model):
     location = models.CharField(max_length=256)
 
 
-
 class ProductOverview(models.Model):
     name = models.CharField(max_length=255)
     value = models.CharField(max_length=255)
-    product = models.ForeignKey(Product, default=None, on_delete=models.CASCADE)
-    
+    product = models.ForeignKey(
+        Product, default=None, on_delete=models.CASCADE)
+
+
 class FeaturedProduct(models.Model):
-    product = models.ForeignKey(Product, default=None, on_delete=models.CASCADE, unique=True)
+    product = models.ForeignKey(
+        Product, default=None, on_delete=models.CASCADE, unique=True)
