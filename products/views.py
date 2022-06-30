@@ -135,9 +135,14 @@ class ProductGalleryDetail(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication]
 
 
+def getImageFullPath(image):
+    url = "http://localhost:8000/media/" + image
+    return url
+
+
 def getProductDetail(request, id):
     products = list(Product.objects.values("id", "name", "image",
-                    "description", "price", "location", "created").filter(id=id))
+                    "description", "price", "location", "created", "user").filter(id=id))
     print(products)
     if not products:
         return JsonResponse({"error": "data not found"}, safe=False, status=404)
@@ -145,9 +150,9 @@ def getProductDetail(request, id):
         "images").filter(product=products[0]['id']))
     overviews = list(ProductOverview.objects.values(
         "name", "value").filter(product=products[0]['id']))
-    imagesList = [products[0]['image']]
+    imagesList = [getImageFullPath(products[0]['image'])]
     for image in images:
-        imagesList.append(image['images'])
+        imagesList.append(getImageFullPath(image['images']))
     products[0]['images'] = imagesList
     products[0]['overviews'] = overviews
     product = products[0]
@@ -174,13 +179,18 @@ def getFeaturedList(request):
     returnProducts = []
     for key, value in groupby(products, key_func):
         index = -1
+        rents = []
+        for val in list(value):
+            val['image'] = getImageFullPath(val['image'])
+            rents.append(val)
+
         for ind, pro in enumerate(returnProducts):
             if pro['category'] == key:
                 index = ind
         if index == -1:
-            returnProducts.append({"category": key, "rents": list(value)})
+            returnProducts.append({"category": key, "rents": rents})
         else:
-            returnProducts[index]['rents'].append(list(value)[0])
+            returnProducts[index]['rents'].append(rents[0])
     print(returnProducts)
     return JsonResponse(returnProducts, safe=False)
 
@@ -191,6 +201,7 @@ def getSearchList(request, search_key):
     if not products:
         return JsonResponse({"error": "data not found"}, safe=False, status=404)
     for index, product in enumerate(products):
+        products[index]['image'] = getImageFullPath(products[index]['image'])
         categories = list(Category.objects.values(
             "name").filter(id=product['category']))
         if categories:
@@ -213,6 +224,7 @@ def getAllProductsWithCategoryName(request, category):
     productsList = []
     for pro in products:
         if pro['category'] == category:
+            pro['image'] = getImageFullPath(pro['image'])
             productsList.append(pro)
     if not productsList:
         return JsonResponse({"error": "data not found"}, safe=False, status=404)
@@ -223,4 +235,8 @@ def getAllCategories(request):
     categories = list(Category.objects.values())
     if not categories:
         return JsonResponse({"error": "data not found"}, safe=False, status=404)
-    return JsonResponse(categories, safe=False)
+    catList = []
+    for cat in categories:
+        cat["image"] = getImageFullPath(cat['image'])
+        catList.append(cat)
+    return JsonResponse(catList, safe=False)

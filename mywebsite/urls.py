@@ -9,6 +9,9 @@ from products.views import MessageList, MessageDetail, CompanyList, CompanyDetai
 
 from products import views
 
+from django.conf import settings
+from django.conf.urls.static import static
+
 API_TITLE = 'Rent API'
 API_DESCRIPTION = 'A web api for CRUD operations along with permissions mixins'
 schema_view = get_schema_view(title=API_TITLE)
@@ -42,4 +45,4 @@ urlpatterns = [
          views.getSearchList, name="Search Result"),
     path('api/all/<str:category>/',
          views.getAllProductsWithCategoryName, name="Products")
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
