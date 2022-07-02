@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import (
     ProductDetail, ProductList, BookProductList, BookProductDetail, CategoryList, CategoryDetail, 
-    FeaturedProductDetail, FeaturedProductList, ProductGalleryDetail, ProductGalleryList
+    FeaturedProductDetail, FeaturedProductList, ProductGalleryDetail, ProductGalleryList, getProductDetail
     )
 
 urlpatterns = [
