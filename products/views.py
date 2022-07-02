@@ -197,7 +197,7 @@ def getFeaturedList(request):
 
 def getSearchList(request, search_key):
     products = list(Product.objects.values("id", "name", "image",
-                    "price", "location", "category").filter(Q(name__contains=search_key.lower()) | Q(location__contains=search_key.lower())))
+                    "price", "location", "category", "tags").filter(Q(name__contains=search_key.lower()) | Q(location__contains=search_key.lower())))
     if not products:
         return JsonResponse({"error": "data not found"}, safe=False, status=404)
     for index, product in enumerate(products):
